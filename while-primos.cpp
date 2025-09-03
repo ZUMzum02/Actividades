@@ -11,7 +11,7 @@ int main() {
     int contador = 0;
     int divisor = 1;
     while ( divisor <= numero) {
-        if ( numero % divisor == 1) {
+        if ( numero % divisor == 0) {
             contador = contador + 1;
             }
         divisor = divisor + 1;
