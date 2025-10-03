@@ -37,13 +37,14 @@ cout << "------------- CASO 3: CAMBIO DE VALOR CON PUNTEROS-------------" << end
  cout << &arr[1] << endl; // se le +4 por cada tipo entero del array
  cout << &arr[2] << endl; // +4
  cout << &arr[3] << endl; // +4
-
+ cout <<  "------------ CASO 4: DIRECCIONES DE ARRAY-------------" << endl;
  int* ptr4 = arr;
  cout << *ptr4 << endl;
  ptr4++; cout << *ptr4 << endl; // imprime el siguiente elemento del array
 
- *ptr4 = *ptr4 + 20;
+ *ptr4 = *ptr4 + 20; // se le suma pero al arr[1] ya que le sumaste ++ a su direccion line 43
  cout << arr[0] << endl;
  cout << arr[1];
 
 }
+
