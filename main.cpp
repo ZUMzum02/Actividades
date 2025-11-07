@@ -1,49 +1,135 @@
-// Example program
 #include <iostream>
-#include <string>
-#include <vector>
 using namespace std;
 
-class veracidad{
-    public:
-    int a,b;
-    veracidad(int x, int y) : a(x), b(y){} 
+const int FILAS = 5;
+const int COLUMNAS = 5;
+const int MAX_ORGANISMOS = 10;
+
+int miAleatorio(int maximo) {
+    static unsigned long semilla = 1234567; // valor base fijo
+    semilla = (semilla * 1103515245 + 12345); // fórmula tipo LCG
+    return (semilla / 65536) % maximo;
+}
+
+
+class Organismo {
+public:
+    int x, y;
+    int vida;
+    Organismo(int px = 0, int py = 0, int pvida = 5) : x(px), y(py), vida(pvida) {}
+
+    virtual char simbolo() const = 0;
+    virtual void mover() {}
+    virtual void comer() {}
+    virtual void vivir() {
+         vida--; 
+        }
+    bool estaVivo() const { 
+        return vida > 0; 
+    }
+};
+
+class Vegetacion : public Organismo {
+public:
+    Vegetacion(int px, int py) : Organismo(px, py, 4) {}
+    char simbolo() const { return 'V'; }
+};
+
+class Presa : public Organismo {
+public:
+    Presa(int px, int py) : Organismo(px, py, 6) {}
+    char simbolo() const { return 'P'; }
+     virtual void mover() {
+         int num = miAleatorio(int maximo);
+         if (presa.x =!0 && presa.x =!4 && presa.y =! 0 && presa.y =! 4){
+         if (num == 0){presa->data[x++][y];}
+         if (num == 1){presa->data[x++][y++];}
+         if (num == 2){presa->data[x][y++];}
+         if (num == 3){presa->data[x][y];}
+         if (num == 4){presa->data[x--][y];}
+         if (num == 5){presa-> data[x][y--];}
+         if (num == 6){presa->data[x--][y--];}
+         }else if (presa.x == 0 || presa.x == 4&& presa.y ==0 && presa.y ==4){
+            if (num == 0){presa->data[x++][y];}
+            if (num == 1){presa->data[x++][y++];}
+            if (num == 3){presa->data[x][y];}
+            if (num == 2){presa->data[x][y++];}
+            
+         }else if (presa.x == 0 &&presa.x== 4&& presa.y == ||presa.y ==4){
+            if (num == 4){presa->data[x--][y];}
+            if (num == 5){presa-> data[x][y--];}
+            if (num == 6){presa->data[x--][y--];}
+            if (num == 3){presa->data[x][y];}
+         }
+     }
+    
+};
+
+class Depredador : public Organismo {
+public:
+    Depredador(int px, int py) : Organismo(px, py, 8) {}
+    char simbolo() const { return 'D'; }
+};
+
+class Mundo {
+private:
+    Organismo* organismos[MAX_ORGANISMOS];
+    int cantidad;
+    char mapa[FILAS][COLUMNAS];
+public:
+    Mundo() {
+        cantidad = 0;
+        for (int i = 0; i < FILAS; i++)
+            for (int j = 0; j < COLUMNAS; j++)
+                mapa[i][j] = '.';
+    }
+
+    void agregar(Organismo* o) {
+        if (cantidad < MAX_ORGANISMOS)
+            organismos[cantidad++] = o;
+    }
+
+    void actualizarMapa() {
+        for (int i = 0; i < FILAS; i++)
+            for (int j = 0; j < COLUMNAS; j++)
+                mapa[i][j] = '.';
+
+        for (int i = 0; i < cantidad; i++) {
+            if (organismos[i]->estaVivo()) {
+                int x = organismos[i]->x;
+                int y = organismos[i]->y;
+                if (x >= 0 && x < FILAS && y >= 0 && y < COLUMNAS)
+                    mapa[x][y] = organismos[i]->simbolo();
+            }
+        }
+    }
+
+    void mostrar() {
+        actualizarMapa();
+        for (int i = 0; i < FILAS; i++) {
+            for (int j = 0; j < COLUMNAS; j++)
+                cout << mapa[i][j] << " ";
+            cout << endl;
+        }
+    }
 };
 
 
-class mayor_o_igual : public veracidad{
-    public:
-    mayor_o_igual(int x, int y) : veracidad(x,y){}
-    
-    void casos(){
-        
-    if (a<b){
-        cout << "a es mayor que b"<< endl;}
-    if (a>b){
-        cout << "a es menor que b" << endl;}
-    if (a==b){
-        cout << "a y b son iguales" << endl;}
-}};
+int main() {
+    Mundo mundo;
 
-class letra{
-    public:
-    char a;
-    letra(char x): a(x){}
-    void mayuscula (){
-    if ( a >= 65 && a <= 90){
-        cout << " es una mayuscula" << endl;
-    } else if (a >= 97 && a <= 122) {
-        cout << "  es una minuscla" << endl;}
-        else if ( a >=48 && a <= 57){
-            cout << "es un numero" << endl;}
-            else{ cout << "sabra dios" << endl;}
-}};
+    Vegetacion v1(0, 0);
+    Vegetacion v2(4, 4);
+    Presa p1(1, 2);
+    Depredador d1(3, 1);
 
+    mundo.agregar(&v1);
+    mundo.agregar(&v2);
+    mundo.agregar(&p1);
+    mundo.agregar(&d1);
 
-int main(){
-    mayor_o_igual* ptr1 = new mayor_o_igual(2,3);
-    ptr1->casos();
-    
-    letra* ptr2 = new letra('&');
-    ptr2->mayuscula();
+    cout << "MUNDO DE CHILL: " << endl;
+    mundo.mostrar();
+
+    return 0;
 }
